@@ -1,0 +1,106 @@
+/* Custom property for color animation */
+@property --hue {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Global styles */
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  background: 
+    radial-gradient(at 100% 20%, #5EB0E525, #0000 70%),
+    radial-gradient(at 20% 20%, #F3D06025, #0000 70%),
+    radial-gradient(at 20% 100%, #A5282C25, #0000 70%),
+    radial-gradient(at 100% 100%, #AEE1CD25, #0000 70%),
+    #1f2020;
+  background-blend-mode: color-dodge;
+}
+
+div {
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+}
+
+/* Container styles */
+.cont {
+  --clr: hsl(var(--hue) 80% 80%);
+  color: var(--clr);
+  filter: drop-shadow(0 0 2vmin currentcolor);
+  animation: clr-chg infinite 10s linear;
+}
+
+/* Color change animation */
+@keyframes clr-chg {
+  from { --hue: 0deg; }
+  to { --hue: 360deg; }
+}
+
+/* Common styles for box and box-inner */
+.box, .box-inner {
+  --ang: 45deg;
+  width: 40vmin;
+  aspect-ratio: 1;
+  position: relative;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 5vmin, var(--clr) 5vmin 10vmin);
+}
+
+/* Pseudo-element styles for 3D effect */
+.box::before, .box::after,
+.box-inner::before, .box-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(var(--ang), transparent, transparent 5vmin, var(--clr) 5vmin 10vmin);
+}
+
+.box::before, .box-inner::before {
+  transform-origin: bottom left;
+  rotate: x 90deg;
+}
+
+.box::after, .box-inner::after {
+  transform-origin: top left;
+  rotate: x -90deg;
+  --ang: -45deg;
+}
+
+/* Box-specific styles */
+.box {
+  rotate: 1 1 1 45deg;
+  animation: rot infinite 10s linear;
+}
+
+.box:hover {
+  animation-play-state: paused;
+  box-shadow: 0 0 2vmin currentcolor;
+}
+
+.box:hover::before,
+.box:hover::after,
+.box:hover .box-inner,
+.box:hover .box-inner::before,
+.box:hover .box-inner::after {
+  box-shadow: 0 0 2vmin currentcolor;
+}
+
+.box::after {
+  content: 'aa';
+}
+
+/* Rotation animation */
+@keyframes rot {
+  to {
+    transform: rotatex(360deg) rotatey(360deg) rotatez(360deg);
+  }
+}
+
+/* Inner box styles */
+.box-inner {
+  position: absolute;
+  translate: 0 0 -40vmin;
+  rotate: 1 1 0 180deg;
+}
